@@ -32,6 +32,13 @@ Sek - 一个类似 Nutch 的, 基于 Hadoop 的并行式爬虫框架.
 * Hadoop 2.5
 * HDFS 做数据存储.
 
+拟用到的类库有
+
+* args4j
+* jsoup
+* log4j2
+* junit
+
 具体模块
 
 * 种子 URL 解析, 生成种子数据库.
