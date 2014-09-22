@@ -1,5 +1,7 @@
 package com.zeroleaf.sek;
 
+import static com.zeroleaf.sek.CommandFactory.findCommand;
+
 /**
  * Entry of application.
  *
@@ -7,27 +9,47 @@ package com.zeroleaf.sek;
  */
 public class Sek {
 
-    private static String findCmdFromArgs(String ... args) {
+    private static String findCmdNameFromArgs(String ... args) {
         for (String arg : args) {
             if (!(arg.startsWith("-") || arg.startsWith("--"))) {
                 return arg;
             }
         }
-        throw new IllegalArgumentException();
+        return null;
     }
 
-    private static void showUsage() {
+    private static Command findCmdFromArgs(String ... args) {
+        final String name = findCmdNameFromArgs(args);
+        if (name == null) {
+            throw new IllegalArgumentException();
+        }
+        final Command cmd = findCommand(name);
+        if (cmd == null) {
+            throw new IllegalArgumentException("Unknown command " + name);
+        }
+        return cmd;
+    }
+
+    /**
+     * Show usage with specified error message.
+     *
+     * @param msg Error message, may be null.
+     */
+    private static void showUsage(String msg) {
         // @TODO 显示程序帮助信息
-        System.out.println("Usage");
+        System.out.format("Error message : %s, and this is usage", msg);
     }
 
     public int run(String ... args) {
         try {
-            final String cmd = findCmdFromArgs(args);
-            System.out.format("Run command %s%n", cmd);
+            final Command cmd = findCmdFromArgs(args);
+            cmd.execute(args);
         } catch (IllegalArgumentException e) {
-            showUsage();
+            showUsage(e.getMessage());
             System.exit(1);
+        } catch (CommandException e) {
+            e.printStackTrace();
+            System.exit(2);
         }
         return 0;
     }
