@@ -11,7 +11,13 @@ public class SekConf extends Configuration {
         addDefaultResource("sek-default.xml");
     }
 
+    static SekConf sekConf = new SekConf();
+
     public SekConf() {
         super();
+    }
+
+    public static SekConf getInstance() {
+        return sekConf;
     }
 }

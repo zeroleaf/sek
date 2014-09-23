@@ -1,9 +1,15 @@
 package com.zeroleaf.sek.crawl;
 
+import org.apache.hadoop.io.Writable;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
 /**
  * @author zeroleaf
  */
-public class URLMeta {
+public class URLMeta implements Writable {
 
     public static enum Status {
         UNFETCHED,
@@ -21,6 +27,8 @@ public class URLMeta {
      */
     private long fetchInterval;
 
+    public URLMeta() {}
+
     public URLMeta(float score, long fetchInterval) {
         this(Status.UNFETCHED, score, fetchInterval);
     }
@@ -35,6 +43,25 @@ public class URLMeta {
         return new URLMeta(score, fetchInterval);
     }
 
+    @Override
+    public void write(DataOutput out) throws IOException {
+        out.writeUTF(status.toString());
+        out.writeFloat(score);
+        out.writeLong(fetchInterval);
+    }
+
+    @Override
+    public void readFields(DataInput in) throws IOException {
+        status = Status.valueOf(in.readUTF());
+        score = in.readFloat();
+        fetchInterval = in.readLong();
+    }
+
+    public static URLMeta read(DataInput in) throws IOException {
+        URLMeta meta = new URLMeta();
+        meta.readFields(in);
+        return meta;
+    }
 
     public Status getStatus() {
         return status;
@@ -58,5 +85,14 @@ public class URLMeta {
 
     public void setFetchInterval(long fetchInterval) {
         this.fetchInterval = fetchInterval;
+    }
+
+    @Override
+    public String toString() {
+        return "URLMeta{" +
+               "status=" + status +
+               ", score=" + score +
+               ", fetchInterval=" + fetchInterval +
+               '}';
     }
 }

@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.UUID;
 
 /**
  * 1. 读取种子URL, 根据规则进行过滤. 2. 如果原先不存在db, 则新建; 存在则merge.
@@ -45,12 +44,13 @@ public class Injector extends AbstractCommand {
 
         final Path tmpOut = injectUrls(urlsDir);
         FileSystem fs = FileSystem.get(new SekConf());
+        CrawlDb crawlDb = new CrawlDb(appDir);
 
         try {
-            if (fs.exists(CrawlDb.getStoragePath(appDir))) {
-                CrawlDb.merge(tmpOut);
+            if (fs.exists(crawlDb.getStoragePath())) {
+                crawlDb.merge(tmpOut);
             } else {
-                CrawlDb.install(tmpOut);
+                crawlDb.install(tmpOut);
             }
         } finally {
             if (fs.exists(tmpOut)) {
@@ -62,12 +62,12 @@ public class Injector extends AbstractCommand {
     private Path injectUrls(String urlsDir)
         throws IOException, ClassNotFoundException, InterruptedException {
         Path urls = new Path(urlsDir);
-        Path tmp = new Path(UUID.randomUUID().toString());
+        Path tmp = randomPath();
 
         Job job = createJob();
 
         job.setMapperClass(InjectorMapper.class);
-        job.setOutputKeyClass(LongWritable.class);
+        job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(URLMeta.class);
 
         FileInputFormat.addInputPath(job, urls);
@@ -75,7 +75,7 @@ public class Injector extends AbstractCommand {
 
         job.waitForCompletion(true);
 
-        LOGGER.info("Injector: number of url " +
+        LOGGER.info("Injector: number of filtered url - {} ",
                     job.getCounters().findCounter("injector", "url_filtered").getValue());
 
         return tmp;

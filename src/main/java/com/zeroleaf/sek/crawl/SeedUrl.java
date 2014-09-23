@@ -52,7 +52,7 @@ class SeedUrl {
     }
 
     public URLMeta toURLMeta() {
-        return new URLMeta(score, fetchInterval);
+        return URLMeta.newInstance(score, fetchInterval);
     }
 
     @Override
