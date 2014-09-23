@@ -1,6 +1,9 @@
 package com.zeroleaf.sek;
 
-import static com.zeroleaf.sek.CommandFactory.findCommand;
+import com.zeroleaf.sek.core.Command;
+import com.zeroleaf.sek.core.CommandException;
+
+import static com.zeroleaf.sek.CommandFactory.find;
 
 /**
  * Entry of application.
@@ -23,7 +26,7 @@ public class Sek {
         if (name == null) {
             throw new IllegalArgumentException();
         }
-        final Command cmd = findCommand(name);
+        final Command cmd = find(name);
         if (cmd == null) {
             throw new IllegalArgumentException("Unknown command " + name);
         }

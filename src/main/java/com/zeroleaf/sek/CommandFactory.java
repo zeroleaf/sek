@@ -1,5 +1,6 @@
 package com.zeroleaf.sek;
 
+import com.zeroleaf.sek.core.Command;
 import com.zeroleaf.sek.crawl.Injector;
 
 import java.util.HashSet;
@@ -22,7 +23,7 @@ public class CommandFactory {
      * @param name Command name.
      * @return Command for the given name. Or {@code null} if not find.
      */
-    public static Command findCommand(String name) {
+    public static Command find(String name) {
         for (Command cmd : commands) {
             if (cmd.getName().equals(name)) {
                 return cmd;

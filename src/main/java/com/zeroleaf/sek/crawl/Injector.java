@@ -1,7 +1,7 @@
 package com.zeroleaf.sek.crawl;
 
-import com.zeroleaf.sek.AbstractCommand;
-import com.zeroleaf.sek.CommandException;
+import com.zeroleaf.sek.core.AbstractCommand;
+import com.zeroleaf.sek.core.CommandException;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
