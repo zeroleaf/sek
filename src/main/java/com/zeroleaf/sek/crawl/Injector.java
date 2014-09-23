@@ -2,7 +2,6 @@ package com.zeroleaf.sek.crawl;
 
 import com.zeroleaf.sek.AbstractCommand;
 import com.zeroleaf.sek.CommandException;
-import com.zeroleaf.sek.SekConf;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -17,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
+ * 1. 读取种子URL, 根据规则进行过滤.
+ * 2. 如果原先不存在db, 则新建; 存在则merge.
+ *
  * @author zeroleaf
  */
 public class Injector extends AbstractCommand {
@@ -57,16 +59,28 @@ public class Injector extends AbstractCommand {
         protected void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
 
-            System.out.format("Key is %s, Value is %s%n", key.toString(), value.toString());
-            context.write(key, value);
+            String meta = value.toString().trim();
+            if (meta.isEmpty()) {
+                return;
+            }
+
+            SeedUrl url;
+            try {
+                url = SeedUrl.parse(meta);
+            } catch (Exception e) {
+                LOGGER.warn("Invalid seed url found: {}", meta);
+                return;
+            }
+
+            context.write(key, new Text(url.toString()));
         }
     }
 
     public static void main(String[] args)
         throws InterruptedException, IOException, ClassNotFoundException {
-//        Injector injector = new Injector();
-//        injector.inject("sek", "/tmp/urls");
+        Injector injector = new Injector();
+        injector.inject("sek", "urls");
 
-        System.out.println(new SekConf().get("sek.injector.seed"));
+//        System.out.println(new SekConf().get("sek.injector.seed"));
     }
 }
