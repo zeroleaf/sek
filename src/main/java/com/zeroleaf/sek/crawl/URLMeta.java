@@ -21,11 +21,8 @@ public class URLMeta {
      */
     private long fetchInterval;
 
-    private long fetchTime = System.currentTimeMillis();
-
-
-    public URLMeta() {
-        this(Status.UNFETCHED, 1.0f, 2592000L);
+    public URLMeta(float score, long fetchInterval) {
+        this(Status.UNFETCHED, score, fetchInterval);
     }
 
     public URLMeta(Status status, float score, long fetchInterval) {
@@ -34,8 +31,8 @@ public class URLMeta {
         this.fetchInterval = fetchInterval;
     }
 
-    public static URLMeta newInstance() {
-        return new URLMeta();
+    public static URLMeta newInstance(float score, long fetchInterval) {
+        return new URLMeta(score, fetchInterval);
     }
 
 
@@ -53,14 +50,6 @@ public class URLMeta {
 
     public void setScore(float score) {
         this.score = score;
-    }
-
-    public long getFetchTime() {
-        return fetchTime;
-    }
-
-    public void setFetchTime(long fetchTime) {
-        this.fetchTime = fetchTime;
     }
 
     public long getFetchInterval() {

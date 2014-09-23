@@ -50,7 +50,7 @@ public class Sek {
         } catch (IllegalArgumentException e) {
             showUsage(e.getMessage());
             System.exit(1);
-        } catch (CommandException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.exit(2);
         }

@@ -9,8 +9,8 @@ class SeedUrl {
     public static final String FETCH_INTERVAL = "fetchInterval";
 
     private String url;
-    private float score;
-    private long fetchInterval;
+    private float score = 0.0f;
+    private long fetchInterval = 2592000;
 
     SeedUrl(String input) {
         parse0(input);
@@ -49,6 +49,10 @@ class SeedUrl {
 
     public long getFetchInterval() {
         return fetchInterval;
+    }
+
+    public URLMeta toURLMeta() {
+        return new URLMeta(score, fetchInterval);
     }
 
     @Override
