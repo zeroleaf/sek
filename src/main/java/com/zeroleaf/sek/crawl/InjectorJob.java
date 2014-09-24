@@ -10,6 +10,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,16 +64,41 @@ public class InjectorJob extends AbstractSJob {
         }
     }
 
+    /**
+     * @TODO Reducer 类, 目前为简单实现. 即去重, 只保留一个. 目前的实现貌似是取最后一个.
+     * 在实际中, 可能要根据具体策略决定留下哪个.
+     */
+    public static class InjectorReducer
+        extends Reducer<Text, URLMeta, Text, URLMeta> {
+
+        @Override
+        protected void reduce(Text key, Iterable<URLMeta> values, Context context)
+            throws IOException, InterruptedException {
+
+            URLMeta first = getFirst(values);
+            if (first != null) {
+                context.write(key, first);
+            }
+        }
+
+        private static <T> T getFirst(Iterable<T> iterable) {
+            for (T t : iterable)
+                return t;
+            return null;
+        }
+    }
+
     @Override
     public Job create() throws IOException {
         JobCreator creator = new JobCreator();
         creator.addIn(in);
         creator.out(out);
 
+        creator.name(getName());
         creator.mapper(InjectorMapper.class);
+        creator.reducer(InjectorReducer.class);
         creator.outKey(Text.class);
         creator.outValue(URLMeta.class);
-        creator.name(getName());
 
         return creator.get();
     }

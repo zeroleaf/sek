@@ -3,13 +3,16 @@ package com.zeroleaf.sek.core;
 import com.zeroleaf.sek.SekConf;
 
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.OutputFormat;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  *
@@ -29,6 +32,13 @@ public class JobCreator {
 
     public JobCreator addIn(Path in) throws IOException {
         FileInputFormat.addInputPath(job, in);
+        return this;
+    }
+
+    public JobCreator addIns(Collection<Path> ins) throws IOException {
+        for (Path in : ins) {
+            addIn(in);
+        }
         return this;
     }
 
@@ -63,6 +73,16 @@ public class JobCreator {
 
     public JobCreator outValue(Class<?> valueClass) {
         job.setOutputValueClass(valueClass);
+        return this;
+    }
+
+    public JobCreator outFormat(Class<? extends OutputFormat> formatClass) {
+        job.setOutputFormatClass(formatClass);
+        return this;
+    }
+
+    public JobCreator inputFormat(Class<? extends InputFormat> formatClass) {
+        job.setInputFormatClass(formatClass);
         return this;
     }
 

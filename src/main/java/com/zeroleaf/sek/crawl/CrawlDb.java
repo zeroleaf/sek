@@ -2,11 +2,13 @@ package com.zeroleaf.sek.crawl;
 
 import com.zeroleaf.sek.SekConf;
 import com.zeroleaf.sek.util.ConfEntry;
+import com.zeroleaf.sek.util.FileSystems;
 
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.mapreduce.Job;
 
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * @author zeroleaf
@@ -36,12 +38,31 @@ public class CrawlDb {
         return new Path(getCrawlDbPath(), CURRENT);
     }
 
-    public void install(Path src) throws IOException {
-        FileSystem fs = FileSystem.get(new SekConf());
-        fs.moveToLocalFile(src, getStoragePath());
+    public Path getOldStoragePath() {
+        return new Path(getCrawlDbPath(), OLD);
     }
 
-    public void merge(Path... paths) {
+    public void install(Path src) throws IOException {
+        FileSystems.moveToLocalFile(src, getStoragePath());
+    }
+
+    public void merge(Path... paths)
+        throws IOException, ClassNotFoundException, InterruptedException {
+        Path outputPath = randomPath();
+        Job job = new CrawlDbMergeJob(outputPath, getStoragePath(), paths).create();
+
+        job.waitForCompletion(true);
+
         final boolean reverse = SekConf.getBoolean(REVERSE);
+        if (reverse) {
+            FileSystems.moveToLocalFile(getStoragePath(), getOldStoragePath());
+        } else {
+            FileSystems.deleteDirectory(getStoragePath());
+        }
+        FileSystems.moveToLocalFile(outputPath, getStoragePath());
+    }
+
+    private static Path randomPath() {
+        return new Path("crawldb-" + UUID.randomUUID().toString());
     }
 }
