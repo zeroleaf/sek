@@ -1,5 +1,7 @@
 package com.zeroleaf.sek;
 
+import com.zeroleaf.sek.util.ConfEntry;
+
 import org.apache.hadoop.conf.Configuration;
 
 /**
@@ -11,7 +13,7 @@ public class SekConf extends Configuration {
         addDefaultResource("sek-default.xml");
     }
 
-    static SekConf sekConf = new SekConf();
+    private static SekConf sekConf = new SekConf();
 
     public SekConf() {
         super();
@@ -19,5 +21,9 @@ public class SekConf extends Configuration {
 
     public static SekConf getInstance() {
         return sekConf;
+    }
+
+    public static boolean getBoolean(ConfEntry<Boolean> entry) {
+        return sekConf.getBoolean(entry.getName(), entry.getValue());
     }
 }

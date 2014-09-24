@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <configuration>
     <property>
-        <name>sek.injector.seed</name>
-        <value>value is seed</value>
-        <description>This is description</description>
+        <name>sek.crawldb.reserve</name>
+        <value>true</value>
+        <description>在对CrawlDb进行更新的时候, 是否对当前的CrawlDb进行备份.</description>
     </property>
 </configuration>

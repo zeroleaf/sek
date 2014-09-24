@@ -1,6 +1,7 @@
 package com.zeroleaf.sek.crawl;
 
 import com.zeroleaf.sek.SekConf;
+import com.zeroleaf.sek.util.ConfEntry;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -12,9 +13,14 @@ import java.io.IOException;
  */
 public class CrawlDb {
 
+    public static final ConfEntry<Boolean> REVERSE =
+        new ConfEntry<>("sek.crawldb.reverse", true);
+
     private static final String CRAWL_DB = "crawldb";
 
     private static final String CURRENT = "current";
+
+    private static final String OLD = "old";
 
     private final String appDir;
 
@@ -30,12 +36,12 @@ public class CrawlDb {
         return new Path(getCrawlDbPath(), CURRENT);
     }
 
-    public void merge(Path ... paths) {
-
+    public void install(Path src) throws IOException {
+        FileSystem fs = FileSystem.get(new SekConf());
+        fs.moveToLocalFile(src, getStoragePath());
     }
 
-    public void install(Path path) throws IOException {
-        FileSystem fs = FileSystem.get(new SekConf());
-        fs.moveToLocalFile(path, getStoragePath());
+    public void merge(Path... paths) {
+        final boolean reverse = SekConf.getBoolean(REVERSE);
     }
 }
