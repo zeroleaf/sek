@@ -2,13 +2,13 @@ package com.zeroleaf.sek.crawl;
 
 import com.zeroleaf.sek.SekConf;
 import com.zeroleaf.sek.util.ConfEntry;
-import com.zeroleaf.sek.util.FileSystems;
+
+import static com.zeroleaf.sek.util.FileSystems.*;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 
 import java.io.IOException;
-import java.util.UUID;
 
 /**
  * @author zeroleaf
@@ -43,7 +43,7 @@ public class CrawlDb {
     }
 
     public void install(Path src) throws IOException {
-        FileSystems.moveToLocalFile(src, getStoragePath());
+        moveToLocalFile(src, getStoragePath());
     }
 
     public void merge(Path... paths)
@@ -55,14 +55,15 @@ public class CrawlDb {
 
         final boolean reverse = SekConf.getBoolean(REVERSE);
         if (reverse) {
-            FileSystems.moveToLocalFile(getStoragePath(), getOldStoragePath());
+            deleteDirectory(getOldStoragePath());
+            moveToLocalFile(getStoragePath(), getOldStoragePath());
         } else {
-            FileSystems.deleteDirectory(getStoragePath());
+            deleteDirectory(getStoragePath());
         }
-        FileSystems.moveToLocalFile(outputPath, getStoragePath());
+        moveToLocalFile(outputPath, getStoragePath());
     }
 
     private static Path randomPath() {
-        return new Path("crawldb-" + UUID.randomUUID().toString());
+        return randomDirectory("crawldb-");
     }
 }

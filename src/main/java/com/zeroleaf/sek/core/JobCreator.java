@@ -3,6 +3,7 @@ package com.zeroleaf.sek.core;
 import com.zeroleaf.sek.SekConf;
 
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -15,7 +16,6 @@ import java.io.IOException;
 import java.util.Collection;
 
 /**
- *
  * @author zeroleaf
  */
 public class JobCreator {
@@ -85,6 +85,18 @@ public class JobCreator {
         job.setInputFormatClass(formatClass);
         return this;
     }
+
+    // 压缩貌似只能对文本进行, 二进制形式的都无法正确输出.
+    public JobCreator compress() {
+        FileOutputFormat.setCompressOutput(job, true);
+        return this;
+    }
+    public JobCreator compressorClass(
+        Class<? extends CompressionCodec> codecClass) {
+        FileOutputFormat.setOutputCompressorClass(job, codecClass);
+        return this;
+    }
+    //
 
     public Job get() {
         return job;

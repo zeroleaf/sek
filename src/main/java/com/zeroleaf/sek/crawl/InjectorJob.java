@@ -11,6 +11,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.output.MapFileOutputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,6 +100,7 @@ public class InjectorJob extends AbstractSJob {
         creator.reducer(InjectorReducer.class);
         creator.outKey(Text.class);
         creator.outValue(URLMeta.class);
+        creator.outFormat(MapFileOutputFormat.class);
 
         return creator.get();
     }
