@@ -5,4 +5,9 @@
         <value>true</value>
         <description>在对CrawlDb进行更新的时候, 是否对当前的CrawlDb进行备份.</description>
     </property>
+    <property>
+        <name>sek.generate.max.count</name>
+        <value>2147483647</value>
+        <description>生成的 fetchlist 中待获取的链接数量. 默认值为 Integer.MAX_VALUE. 值类型为 int.</description>
+    </property>
 </configuration>

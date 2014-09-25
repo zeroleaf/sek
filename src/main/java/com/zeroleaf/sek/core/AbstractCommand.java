@@ -21,16 +21,17 @@ public abstract class AbstractCommand implements Command {
         return FileSystems.randomDirectory(getName() + "-");
     }
 
-    public boolean runJob(Job job) {
+    public boolean runJob(Job job)
+        throws InterruptedException, IOException, ClassNotFoundException {
         try {
             if (job.waitForCompletion(true)) {
                 doAfterSuccess(job);
                 return true;
             }
         } catch (IOException | InterruptedException | ClassNotFoundException e) {
-            e.printStackTrace();
+            doAfterFail(job);
+            throw e;
         }
-        doAfterFail(job);
         return false;
     }
 
@@ -40,7 +41,8 @@ public abstract class AbstractCommand implements Command {
     protected void doAfterFail(Job job) {
     }
 
-    public boolean runJob(SJob sJob) throws IOException {
+    public boolean runJob(SJob sJob)
+        throws IOException, ClassNotFoundException, InterruptedException {
         return runJob(sJob.create());
     }
 

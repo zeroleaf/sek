@@ -57,7 +57,8 @@ public class Injector extends AbstractCommand {
         }
     }
 
-    private Path runInjectJob(String urls) throws IOException {
+    private Path runInjectJob(String urls)
+        throws IOException, InterruptedException, ClassNotFoundException {
         Path out = randomDirectory();
 
         runJob(new InjectorJob(new Path(urls), out));

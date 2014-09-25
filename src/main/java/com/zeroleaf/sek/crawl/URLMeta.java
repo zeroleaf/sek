@@ -11,6 +11,9 @@ import java.io.IOException;
  */
 public class URLMeta implements Writable {
 
+    /**
+     * URL 的状态.
+     */
     public static enum Status {
         UNFETCHED,
         FETCHED,
@@ -20,12 +23,25 @@ public class URLMeta implements Writable {
 
     private Status status;
 
+    /**
+     * 该 URL 的评分, 是进行排名的一个重要参考数据.
+     */
     private float score;
 
     /**
      * 抓取的时间间隔. 单位为 秒.
      */
     private long fetchInterval;
+
+    /**
+     * 该数据的生成时间.
+     */
+    private long generateTime = System.currentTimeMillis();
+
+    /**
+     * 该数据的修改时间.
+     */
+    private long modifiedTime = -1;
 
     public URLMeta() {}
 
@@ -87,12 +103,26 @@ public class URLMeta implements Writable {
         this.fetchInterval = fetchInterval;
     }
 
+    public long getGenerateTime() {
+        return generateTime;
+    }
+
+    public long getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(long modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
     @Override
     public String toString() {
         return "URLMeta{" +
                "status=" + status +
                ", score=" + score +
                ", fetchInterval=" + fetchInterval +
+               ", generateTime=" + generateTime +
+               ", modifiedTime=" + modifiedTime +
                '}';
     }
 }
