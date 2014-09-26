@@ -3,4 +3,4 @@
 target/
 sek/
 urls/
-*.log
+*log*
