@@ -8,6 +8,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Sek 数据输出的目录结构.
+ *
+ * 首先是一个 base 目录, 所有的输出都在该文件夹下.
+ * 特别的, 有如下的几个子文件夹:
+ *
+ * * crawldb - 保存 URL 数据的文件夹.
+ * ** current - 当前的 URL 数据, 是从这里获取数据生成 fetchlist 的.
+ * ** old - 上一次的 URL 数据, 备份.
+ * * segments - 里面包含有多个 segment.
+ * ** segment - 一次抓取对应一个 segment. 命名规则为 年月日时分秒.
+ * *** fetchlist - 此次要抓取的 URL 列表.
+ *
+ *
+ * 通过静态工厂方法 get(String) 传入 base 路径来获取该类的实例.
+ * 由于创建多个相同 base 的实例没有多大意义,
+ * 因此 get() 对于同一 base 总是返回相同的实例.
+ *
  * @author zeroleaf
  */
 public class DirectoryStructure {
@@ -49,14 +66,14 @@ public class DirectoryStructure {
     // @TODO 如何能更好的实现并发?
     /**
      * 
-     * @param appDir
+     * @param base
      * @return
      */
-    public synchronized static DirectoryStructure get(String appDir) {
-        DirectoryStructure dSt = bases.get(appDir);
+    public synchronized static DirectoryStructure get(String base) {
+        DirectoryStructure dSt = bases.get(base);
         if (dSt == null) {
-            dSt = new DirectoryStructure(appDir);
-            bases.put(appDir, dSt);
+            dSt = new DirectoryStructure(base);
+            bases.put(base, dSt);
         }
         return dSt;
     }

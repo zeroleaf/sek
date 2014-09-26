@@ -45,7 +45,7 @@ public class Injector extends AbstractCommand {
         CrawlDb crawlDb = new CrawlDb(appDir);
 
         try {
-            if (fs.exists(crawlDb.getStoragePath())) {
+            if (crawlDb.exist()) {
                 crawlDb.merge(tmpOut);
             } else {
                 crawlDb.install(tmpOut);

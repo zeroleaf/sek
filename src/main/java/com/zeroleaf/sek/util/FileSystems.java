@@ -34,6 +34,17 @@ public class FileSystems {
     }
 
     /**
+     * 判断指定的路径是否存在.
+     *
+     * @param path 路径. 可能是文件或者文件夹.
+     * @return 存在 返回 true; 否则, false.
+     * @throws IOException
+     */
+    public static boolean exists(Path path) throws IOException {
+        return fs.exists(path);
+    }
+
+    /**
      * 在当前文件夹下创建一个文件夹并返回对应的 Path 对象.
      *
      * 文件夹的名字是随机的, 但带有指定的前缀.
