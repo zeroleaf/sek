@@ -15,7 +15,17 @@ import java.io.IOException;
  */
 public abstract class AbstractCommand implements Command {
 
+    public static String NEW_LINE = System.lineSeparator();
+
     protected int existCode;
+
+    /**
+     * @TODO 该方法应该放在 Command 接口中.
+     *
+     * 显示该命令的用法.
+     */
+    public void showUsage() {
+    }
 
     protected Path randomDirectory() {
         return FileSystems.randomDirectory(getName() + "-");
@@ -51,8 +61,9 @@ public abstract class AbstractCommand implements Command {
         return existCode;
     }
 
-    protected static void parseArgs(SekArgs bean, String ... args)
+    protected static void parseArgs(SekArgs bean, String... args)
         throws CmdLineException {
+
         CmdLineParser parser = new CmdLineParser(bean);
         parser.parseArgument(args);
     }

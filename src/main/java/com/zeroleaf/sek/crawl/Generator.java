@@ -8,6 +8,8 @@ import java.io.IOException;
 /**
  * @TODO 简单实现, 目前仅是按 URL 的评分从高到低排序.
  *
+ * 生成此次待抓取列表.
+ *
  * @author zeroleaf
  */
 public class Generator extends AbstractCommand {

@@ -26,9 +26,9 @@ public class JobCreator {
         job = Job.getInstance(SekConf.getInstance());
     }
 
-    public JobCreator addIn(String in) throws IOException {
-        return addIn(new Path(in));
-    }
+//    public JobCreator addIn(java.nio.file.Path in) throws IOException {
+//        return addIn(new Path(in));
+//    }
 
     public JobCreator addIn(Path in) throws IOException {
         FileInputFormat.addInputPath(job, in);

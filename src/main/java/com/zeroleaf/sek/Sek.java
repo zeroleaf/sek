@@ -1,6 +1,7 @@
 package com.zeroleaf.sek;
 
 import com.zeroleaf.sek.core.Command;
+import com.zeroleaf.sek.core.SekException;
 
 import static com.zeroleaf.sek.CommandFactory.find;
 
@@ -47,7 +48,7 @@ public class Sek {
         try {
             cmd = findCmdFromArgs(args);
             cmd.execute(args);
-        } catch (IllegalArgumentException e) {
+        } catch (SekException e) {
             showUsage(e.getMessage());
             System.exit(1);
         } catch (Exception e) {

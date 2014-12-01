@@ -3,6 +3,7 @@ package com.zeroleaf.sek.crawl;
 import com.zeroleaf.sek.SekConf;
 import com.zeroleaf.sek.core.AbstractCommand;
 
+import com.zeroleaf.sek.core.SekException;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
@@ -10,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  *
@@ -19,6 +22,8 @@ public class Injector extends AbstractCommand {
 
     private static Logger LOGGER = LoggerFactory.getLogger(Injector.class);
 
+    private InjectorArgs args = new InjectorArgs();
+
     @Override
     public String getName() {
         return "inject";
@@ -27,8 +32,11 @@ public class Injector extends AbstractCommand {
     @Override
     public void execute(String... as) throws Exception {
         try {
-            InjectorArgs args = new InjectorArgs();
+
             parseArgs(args, as);
+
+            checkArgs();
+
             inject(args.getAppDir(), args.getUrlsDir());
         } catch (Exception e) {
             // @TODO 出错原因更加细化.
@@ -36,6 +44,13 @@ public class Injector extends AbstractCommand {
             throw e;
         }
     }
+
+    private void checkArgs() throws SekException {
+        if (Files.notExists(Paths.get(args.getUrlsDir()))) {
+            throw new SekException("url are required.");
+        }
+    }
+
 
     public void inject(String appDir, String urlsDir)
         throws IOException, ClassNotFoundException, InterruptedException {
