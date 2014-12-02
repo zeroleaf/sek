@@ -36,7 +36,7 @@ public class Generator extends AbstractCommand {
 
         DirectoryStructure dSt = DirectoryStructure.get(appDir);
 
-        runJob(new GeneratorJob(dSt.getCrawlDb(), dSt.getFetchlist()));
+        runJob(new GeneratorJob(dSt.getCrawlDb(), dSt.getFetchlist(true)));
     }
 
     public static void main(String[] args) throws Exception {

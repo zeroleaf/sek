@@ -2,7 +2,11 @@ package com.zeroleaf.sek.core;
 
 import org.apache.hadoop.fs.Path;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +41,7 @@ public class DirectoryStructure {
     // Segments
     private static final String SEGMENTS = "segments";
     private static final String FETCH_LIST = "fetchlist";
+    private static final String FETCH_DATA = "fetchdata";
 
     private final Path base;
 
@@ -52,6 +57,7 @@ public class DirectoryStructure {
     private Path segment;
 
     private Path fetchlist;
+    private Path fetchdata;
 
     private static Map<String, DirectoryStructure> bases = new HashMap<>();
 
@@ -106,15 +112,55 @@ public class DirectoryStructure {
         return sdf.format(new Date(System.currentTimeMillis()));
     }
 
-    public Path getFetchlist() {
+    public Path getFetchlist(boolean create) {
         if (segment == null) {
-            newSegment();
+            if (create)
+                newSegment();
+            else
+                segment = findLastSegment();
         }
-        if (fetchlist == null) {
-            fetchlist = new Path(segment, FETCH_LIST);
-        }
-        return fetchlist;
+        if (segment == null)
+            return null;
+
+        return new Path(segment, FETCH_LIST);
+//        if (fetchlist == null) {
+//            if (!create)
+//                return null;
+//            fetchlist = new Path(segment, FETCH_LIST);
+//        }
+//        return fetchlist;
     }
 
+    public Path getFetchdata() {
+        if (segment == null)
+            segment = findLastSegment();
+
+        return new Path(segment, FETCH_DATA);
+    }
+
+    public Path findLastSegment() {
+
+        String[] dirs = new File(segments.toString()).list();
+        if (dirs.length == 0)
+            return null;
+
+        Arrays.sort(dirs);
+        return new Path(segments, dirs[dirs.length - 1]);
+    }
+
+    public Path findLastFetchlist() {
+        Path seg = findLastSegment();
+        if (seg == null)
+            return null;
+
+        // 该方法不会创建文件夹.
+        return new Path(seg, FETCH_LIST);
+    }
+
+    public boolean exists(Path hp) {
+        if (hp == null)
+            return false;
+        return Files.exists(Paths.get(hp.toString()));
+    }
 
 }

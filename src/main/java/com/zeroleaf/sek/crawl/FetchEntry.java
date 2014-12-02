@@ -6,6 +6,7 @@ import org.apache.hadoop.io.WritableComparable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Comparator;
 
 /**
  * @author zeroleaf
@@ -32,6 +33,16 @@ public class FetchEntry implements WritableComparable<FetchEntry> {
     public void setUrl(Text url) {
         this.url = url;
     }
+
+    /**
+     * 基于 compareTo() 实现的比较器.
+     */
+    public static Comparator<FetchEntry> COMPARATOR = new Comparator<FetchEntry>() {
+        @Override
+        public int compare(FetchEntry o1, FetchEntry o2) {
+            return o1.compareTo(o2);
+        }
+    };
 
     @Override
     public int compareTo(FetchEntry o) {

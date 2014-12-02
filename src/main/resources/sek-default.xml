@@ -10,4 +10,27 @@
         <value>2147483647</value>
         <description>生成的 fetchlist 中待获取的链接数量. 默认值为 Integer.MAX_VALUE. 值类型为 int.</description>
     </property>
+
+
+    <property>
+        <name>sek.download.threads</name>
+        <value>4</value>
+        <description>下载的线程数.</description>
+    </property>
+    <property>
+        <name>sek.download.limit</name>
+        <value>-1</value>
+        <description>网页下载的限制大小, 以字节为单位. 默认不限制, 即下载整个网页.</description>
+    </property>
+    <property>
+        <name>sek.download.repeat</name>
+        <value>1</value>
+        <description>重复下载次数, 默认为 1.</description>
+    </property>
+    <property>
+        <name>sek.download.during</name>
+        <value>60</value>
+        <description>指定程序运行时间, 分钟为单位. 默认 1 小时, 即 60 分钟.</description>
+    </property>
+
 </configuration>

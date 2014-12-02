@@ -26,4 +26,8 @@ public class SekConf extends Configuration {
     public static boolean getBoolean(ConfEntry<Boolean> entry) {
         return sekConf.getBoolean(entry.getName(), entry.getValue());
     }
+
+    public static int getInt(String key) {
+        return sekConf.getInt(key, 0);
+    }
 }
