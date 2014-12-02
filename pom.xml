@@ -13,6 +13,7 @@
         <args4j.version>2.0.29</args4j.version>
         <log4j2.version>2.0.2</log4j2.version>
         <jsoup.version>1.8.1</jsoup.version>
+        <httpclient.version>4.3.6</httpclient.version>
     </properties>
 
     <dependencies>
@@ -73,6 +74,12 @@
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>${jsoup.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
         </dependency>
 
     </dependencies>
