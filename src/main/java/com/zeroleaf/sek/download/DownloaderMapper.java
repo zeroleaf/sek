@@ -2,6 +2,7 @@ package com.zeroleaf.sek.download;
 
 import com.zeroleaf.sek.crawl.FetchEntry;
 import com.zeroleaf.sek.data.PageEntry;
+import com.zeroleaf.sek.util.ConfigUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -42,9 +43,16 @@ public class DownloaderMapper
 
         Configuration conf = context.getConfiguration();
 
-        threads = conf.getInt(THREADS, 4);
-        during  = conf.getInt(DURING, 60);
-        limit   = conf.getInt(LIMIT, -1);
+        ConfigUtils.setConf(conf);
+
+        threads = ConfigUtils.getInt(THREADS);
+        during  = ConfigUtils.getInt(DURING);
+        limit   = ConfigUtils.getInt(LIMIT);
+
+        LOGGER.info("下载线程数量: {}", threads);
+        LOGGER.info("下载时间: {} 分钟", during);
+        if (limit != -1)
+            LOGGER.info("网页下载大小限制为 {} byte", limit);
 
         downloaders = Executors.newFixedThreadPool(threads);
     }

@@ -2,13 +2,10 @@ package com.zeroleaf.sek.download;
 
 import com.zeroleaf.sek.core.AbstractSJob;
 import com.zeroleaf.sek.core.JobCreator;
-import com.zeroleaf.sek.crawl.FetchEntry;
 import com.zeroleaf.sek.data.PageEntry;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.MapFileOutputFormat;
 

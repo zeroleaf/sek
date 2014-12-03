@@ -2,15 +2,10 @@ package com.zeroleaf.sek.download;
 
 import com.zeroleaf.sek.core.AbstractCommand;
 import com.zeroleaf.sek.core.DirectoryStructure;
-import com.zeroleaf.sek.core.SekException;
 
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * Created by zeroleaf on 14-12-1.
@@ -70,17 +65,8 @@ public class Downloader extends AbstractCommand {
         }
     }
 
-    private void download(DownloaderArgs dArgs) {
-        System.out.format("args is %s%n", dArgs);
-    }
-
-//    private void checkArgs() throws SekException {
-//        if (Files.notExists(Paths.get(dArgs.getFetchlist())))
-//            throw new SekException("Path <fetchlist> must exist!");
-//    }
-
     public static void main(String[] args) throws Exception {
-        args = new String[]{"download", "-l", "10240", "-n", "3", "-t", "120", "sek"};
+        args = new String[]{"download", "-l", "10240", "-n", "10", "-t", "120", "sek"};
         new Downloader().execute(args);
     }
 
