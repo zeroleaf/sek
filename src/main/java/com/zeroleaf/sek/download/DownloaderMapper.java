@@ -4,7 +4,6 @@ import com.zeroleaf.sek.crawl.FetchEntry;
 import com.zeroleaf.sek.data.PageEntry;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.slf4j.Logger;
@@ -18,6 +17,8 @@ import java.util.concurrent.*;
 */
 public class DownloaderMapper
         extends Mapper<LongWritable, FetchEntry, Text, PageEntry> {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(DownloaderMapper.class);
 
     public static final String THREADS = "sek.download.threads";
     public static final String DURING  = "sek.download.during";
@@ -52,7 +53,12 @@ public class DownloaderMapper
     protected void map(LongWritable key, FetchEntry value, Context context)
             throws IOException, InterruptedException {
 
-        distributor.addItem(value);
+        LOGGER.debug("添加第 {} 个下载条目 {}", key, value);
+
+        // 每次迭代 key, value 引用的都是同一内存位置的对象.(即开始新一轮迭代时用新数据覆盖旧数据)
+        // 因此, 如果直接加到集合中, 那么集合中的元素引用的都将是同一个内存对象! 其值为最后一次迭代时的值.
+        // 为了保存以便之后使用, 必须加以复制, 保存其副本.
+        distributor.addItem(value.clone());
     }
 
     @Override
@@ -68,7 +74,6 @@ public class DownloaderMapper
         HtmlPageWriter htmlPageWriter = new HtmlPageWriter(htmlPages, context);
         Thread t = new Thread(htmlPageWriter);
         t.start();
-
 
         downloaders.shutdown();
         downloaders.awaitTermination(during, TimeUnit.MINUTES);

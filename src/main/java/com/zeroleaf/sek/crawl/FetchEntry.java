@@ -11,7 +11,7 @@ import java.util.Comparator;
 /**
  * @author zeroleaf
  */
-public class FetchEntry implements WritableComparable<FetchEntry> {
+public class FetchEntry implements WritableComparable<FetchEntry>, Cloneable {
 
     private Text url;
     private URLMeta meta;
@@ -86,6 +86,17 @@ public class FetchEntry implements WritableComparable<FetchEntry> {
         int result = url.hashCode();
         result = 31 * result + meta.hashCode();
         return result;
+    }
+
+    @Override public FetchEntry clone() {
+        try {
+            FetchEntry result = (FetchEntry) super.clone();
+            result.url  = new Text(url.toString());
+            result.meta = meta.clone();
+            return result;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     @Override

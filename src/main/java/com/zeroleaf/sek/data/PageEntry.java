@@ -12,11 +12,12 @@ import java.io.IOException;
  */
 public class PageEntry implements Writable {
 
-    private int length;
-    private Text type;
-    private Text content;
+    private int length = 0;
+    private Text type = new Text();
+    private Text content = new Text();
 
-    public PageEntry() {}
+    public PageEntry() {
+    }
 
     public PageEntry(int length, String type, String content) {
         this.length  = length;
@@ -60,5 +61,14 @@ public class PageEntry implements Writable {
         length = dataInput.readInt();
         type.readFields(dataInput);
         content.readFields(dataInput);
+    }
+
+    @Override
+    public String toString() {
+        return "PageEntry{" +
+                "length=" + length +
+                ", type=" + type +
+                ", content=" + content +
+                '}';
     }
 }

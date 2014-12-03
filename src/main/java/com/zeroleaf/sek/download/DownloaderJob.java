@@ -36,11 +36,11 @@ public class DownloaderJob extends AbstractSJob {
         jobCreator.addIn(fetchlist);
         jobCreator.out(fetchdata);
 
-//        jobCreator.inputFormat(SequenceFileInputFormat.class);
+        jobCreator.inputFormat(SequenceFileInputFormat.class);
         jobCreator.mapper(DownloaderMapper.class);
         jobCreator.outKey(Text.class);
         jobCreator.outValue(PageEntry.class);
-//        jobCreator.outFormat(MapFileOutputFormat.class);
+        jobCreator.outFormat(MapFileOutputFormat.class);
 
         return jobCreator.get();
     }

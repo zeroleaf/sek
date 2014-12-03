@@ -1,11 +1,16 @@
 package com.zeroleaf.sek.download;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 /**
  * Created by zeroleaf on 14-12-2.
  */
 public class SimpleDistributor<V> implements Distributor<V> {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(SimpleDistributor.class);
 
     private boolean isSorted;
 
@@ -20,7 +25,9 @@ public class SimpleDistributor<V> implements Distributor<V> {
     }
 
     public synchronized void addItem(V v) {
+        LOGGER.debug("添加新条目 {}", v);
         items.add(v);
+        isSorted = false;
     }
 
     @Override
@@ -31,12 +38,15 @@ public class SimpleDistributor<V> implements Distributor<V> {
         if (!isSorted)
             sortItems();
 
-        return items.removeLast();
+        V item = items.removeLast();
+        LOGGER.debug("提供条目 {}", item);
+        return item;
     }
 
     private void sortItems() {
         if (comparator != null)
             Collections.sort(items, comparator);
+        isSorted = true;
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * @author zeroleaf
  */
-public class URLMeta implements Writable {
+public class URLMeta implements Writable, Cloneable {
 
     /**
      * URL 的状态.
@@ -113,6 +113,41 @@ public class URLMeta implements Writable {
 
     public void setModifiedTime(long modifiedTime) {
         this.modifiedTime = modifiedTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        URLMeta urlMeta = (URLMeta) o;
+
+        if (fetchInterval != urlMeta.fetchInterval) return false;
+        if (generateTime != urlMeta.generateTime) return false;
+        if (modifiedTime != urlMeta.modifiedTime) return false;
+        if (Float.compare(urlMeta.score, score) != 0) return false;
+        if (status != urlMeta.status) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = status.hashCode();
+        result = 31 * result + (score != +0.0f ? Float.floatToIntBits(score) : 0);
+        result = 31 * result + (int) (fetchInterval ^ (fetchInterval >>> 32));
+        result = 31 * result + (int) (generateTime ^ (generateTime >>> 32));
+        result = 31 * result + (int) (modifiedTime ^ (modifiedTime >>> 32));
+        return result;
+    }
+
+    @Override
+    protected URLMeta clone() {
+        try {
+            return (URLMeta) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     @Override
