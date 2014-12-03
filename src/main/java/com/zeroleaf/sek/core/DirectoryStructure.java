@@ -23,6 +23,8 @@ import java.util.Map;
  * * segments - 里面包含有多个 segment.
  * ** segment - 一次抓取对应一个 segment. 命名规则为 年月日时分秒.
  * *** fetchlist - 此次要抓取的 URL 列表.
+ * *** fetchdata - 此次抓取的数据.
+ * *datadb - 所有抓取过的网页数据.
  *
  *
  * 通过静态工厂方法 get(String) 传入 base 路径来获取该类的实例.
@@ -39,9 +41,13 @@ public class DirectoryStructure {
     private static final String CRAWL_DB_OLD = "old";
 
     // Segments
-    private static final String SEGMENTS = "segments";
+    private static final String SEGMENTS   = "segments";
     private static final String FETCH_LIST = "fetchlist";
     private static final String FETCH_DATA = "fetchdata";
+    private static final String PARSE_DATA = "parsedata";
+
+    // DataDb
+    private static final String DATA_DB = "datadb";
 
     private final Path base;
 
@@ -58,6 +64,10 @@ public class DirectoryStructure {
 
     private Path fetchlist;
     private Path fetchdata;
+    private Path parsedata;
+
+    // DataDb
+    private Path datadb;
 
     private static Map<String, DirectoryStructure> bases = new HashMap<>();
 
@@ -66,6 +76,7 @@ public class DirectoryStructure {
 
         crawldb0 = new Path(base, CRAWL_DB);
         segments = new Path(base, SEGMENTS);
+        datadb   = new Path(base, DATA_DB);
     }
 
 
@@ -138,6 +149,13 @@ public class DirectoryStructure {
         return new Path(segment, FETCH_DATA);
     }
 
+    public Path getParsedata() {
+        if (segment == null)
+            segment = findLastSegment();
+
+        return new Path(segment, PARSE_DATA);
+    }
+
     public Path findLastSegment() {
 
         String[] dirs = new File(segments.toString()).list();
@@ -161,6 +179,10 @@ public class DirectoryStructure {
         if (hp == null)
             return false;
         return Files.exists(Paths.get(hp.toString()));
+    }
+
+    public Path getDatadb() {
+        return datadb;
     }
 
 }

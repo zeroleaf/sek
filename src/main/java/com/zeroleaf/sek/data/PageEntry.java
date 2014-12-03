@@ -16,6 +16,9 @@ public class PageEntry implements Writable {
     private Text type = new Text();
     private Text content = new Text();
 
+    // 该网页最近一次的访问时间. 大致的. 如果要精确的时间则应该是 HtmlPage 的生成时间.
+    private long modifiedTime = System.currentTimeMillis();
+
     public PageEntry() {
     }
 
@@ -49,11 +52,20 @@ public class PageEntry implements Writable {
         this.content = content;
     }
 
+    public long getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(long modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
     @Override
     public void write(DataOutput dataOutput) throws IOException {
         dataOutput.writeInt(length);
         type.write(dataOutput);
         content.write(dataOutput);
+//        dataOutput.writeLong(modifiedTime);
     }
 
     @Override
@@ -61,6 +73,7 @@ public class PageEntry implements Writable {
         length = dataInput.readInt();
         type.readFields(dataInput);
         content.readFields(dataInput);
+//        modifiedTime = dataInput.readLong();
     }
 
     @Override

@@ -59,6 +59,12 @@ public class URLMeta implements Writable, Cloneable {
         return new URLMeta(score, fetchInterval);
     }
 
+    public static URLMeta newDefaultUnfetched() {
+        URLMeta meta = new URLMeta();
+        meta.status = Status.UNFETCHED;
+        return meta;
+    }
+
     @Override
     public void write(DataOutput out) throws IOException {
         out.writeUTF(status.toString());
