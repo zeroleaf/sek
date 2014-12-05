@@ -2,8 +2,8 @@ package com.zeroleaf.sek.crawl;
 
 import com.zeroleaf.sek.core.AbstractSJob;
 import com.zeroleaf.sek.core.JobCreator;
-import com.zeroleaf.sek.core.URLFilters;
-import com.zeroleaf.sek.core.URLNormalizers;
+import com.zeroleaf.sek.core.URLFilterAggregator;
+import com.zeroleaf.sek.core.URLNormalizerAggregator;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -52,16 +52,17 @@ public class InjectorJob extends AbstractSJob {
                 return;
             }
 
-            final String url = URLNormalizers.normalize(seedUrl.getUrl());
-            if (url.isEmpty()) {
-                return;
-            }
-
-            if (URLFilters.filter(seedUrl.getUrl())) {
-                context.getCounter("injector", "url_filtered").increment(1);
-            }
-
-            context.write(new Text(url), seedUrl.toURLMeta());
+//            final String url = URLNormalizerAggregator.normalize(seedUrl.getUrl());
+//            if (url.isEmpty()) {
+//                return;
+//            }
+//
+//            if (URLFilterAggregator.filter(seedUrl.getUrl())) {
+//                context.getCounter("injector", "url_filtered").increment(1);
+//            }
+//
+//            context.write(new Text(url), seedUrl.toURLMeta());
+            context.write(new Text(seedUrl.getUrl()), seedUrl.toURLMeta());
         }
     }
 

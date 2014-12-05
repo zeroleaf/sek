@@ -3,6 +3,8 @@ package com.zeroleaf.sek.merge;
 import com.zeroleaf.sek.core.AbstractCommand;
 import com.zeroleaf.sek.core.DirectoryStructure;
 import com.zeroleaf.sek.crawl.CrawlDb;
+import com.zeroleaf.sek.util.FileSystems;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.hadoop.fs.Path;
 
@@ -18,14 +20,15 @@ public class Merge extends AbstractCommand {
 
     @Override
     public void showUsage() {
-
+        HelpFormatter hf = new HelpFormatter();
+        hf.printHelp("merge <appdir>", mergeArgs);
     }
 
     @Override
     public void execute(String... args) throws Exception {
         try {
             if (args.length < 2)
-                throw new IllegalArgumentException("<appdir> bixu ");
+                throw new IllegalArgumentException("<appdir> 必须提供");
 
             String appdir = args[1];
 
@@ -34,10 +37,9 @@ public class Merge extends AbstractCommand {
             runJob(new NewUrlJob(dSt.getParsedata(), rOut));
 
             CrawlDb crawlDb = new CrawlDb(appdir);
+            crawlDb.merge(false, rOut);
 
-//            crawlDb.merge(rOut);
-
-
+            FileSystems.deleteDirectory(rOut);
 
         } catch (Exception e) {
             e.printStackTrace();

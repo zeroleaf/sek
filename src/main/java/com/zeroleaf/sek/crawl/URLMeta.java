@@ -5,11 +5,28 @@ import org.apache.hadoop.io.Writable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Comparator;
 
 /**
  * @author zeroleaf
+ *
+ * @TODO
+ * 1. 对于无法下载(或不存在)的 URL, 其 Score 值应该比较低, 在 Generate 时应加以考虑.
+ *
  */
 public class URLMeta implements Writable, Cloneable {
+
+    public static Comparator<URLMeta> MODIFIED_TIME_COMPARATOR = new Comparator<URLMeta>() {
+        @Override
+        public int compare(URLMeta o1, URLMeta o2) {
+            if (o1.modifiedTime > o2.modifiedTime)
+                return 1;
+            else if (o1.modifiedTime == o2.modifiedTime)
+                return 0;
+            else
+                return -1;
+        }
+    };
 
     /**
      * URL 的状态.

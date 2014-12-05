@@ -59,9 +59,12 @@ public class Injector extends AbstractCommand {
         FileSystem fs = FileSystem.get(new SekConf());
         CrawlDb crawlDb = new CrawlDb(appDir);
 
+        final boolean reverse = SekConf.getBoolean(CrawlDb.REVERSE);
+
         try {
+            // @TODO 可以直接用 merge() 方法而不用判断.
             if (crawlDb.exist()) {
-                crawlDb.merge(tmpOut);
+                crawlDb.merge(reverse, tmpOut);
             } else {
                 crawlDb.install(tmpOut);
             }

@@ -8,15 +8,15 @@ import java.util.Set;
  *
  * @author zeroleaf
  */
-public class URLFilters {
+public class URLFilterAggregator implements URLFilter {
 
-    private static Set<URLFilter> filters = new HashSet<>();
+    private Set<URLFilter> filters = new HashSet<>();
 
-    static {
-
+    public void addURLFilter(URLFilter filter) {
+        this.filters.add(filter);
     }
 
-    public static boolean filter(String url) {
+    public boolean filter(String url) {
         for (URLFilter f : filters) {
             if (f.filter(url)) {
                 return true;

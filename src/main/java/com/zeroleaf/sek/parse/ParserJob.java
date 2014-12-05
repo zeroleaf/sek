@@ -72,7 +72,7 @@ public class ParserJob extends AbstractSJob {
         jobCreator.mapper(ParserMapper.class);
         jobCreator.outKey(Text.class);
         jobCreator.outValue(ParsedEntry.class);
-//        jobCreator.outFormat(MapFileOutputFormat.class);
+        jobCreator.outFormat(MapFileOutputFormat.class);
 
         return jobCreator.get();
     }

@@ -33,4 +33,20 @@
         <description>指定程序运行时间, 分钟为单位. 默认 1 小时, 即 60 分钟.</description>
     </property>
 
+    <property>
+        <name>sek.merge.normalizer.parameter</name>
+        <value>true</value>
+        <description>是否使用 PARAMETER_NORMALIZER.</description>
+    </property>
+    <property>
+        <name>sek.merge.normalizer.anchor</name>
+        <value>true</value>
+        <description>是否使用 ANCHOR_NORMALIZER.</description>
+    </property>
+    <property>
+        <name>sek.merge.filter.http</name>
+        <value>true</value>
+        <description>是否使用 HttpFilter. 该过滤器会过滤所有非HTTP的URL.</description>
+    </property>
+
 </configuration>
