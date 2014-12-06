@@ -7,6 +7,7 @@ import org.apache.hadoop.io.Writable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +15,15 @@ import java.util.Set;
  * Created by zeroleaf on 14-12-3.
  */
 public class ParsedEntry implements Writable {
+
+    public static Comparator<ParsedEntry> MODIFIED_TIME_COMPARATOR =
+            new Comparator<ParsedEntry>() {
+        @Override
+        public int compare(ParsedEntry o1, ParsedEntry o2) {
+            return o1.modifiedTime > o2.modifiedTime ? 1 :
+                    o1.modifiedTime == o2.modifiedTime ? 0 : -1;
+        }
+    };
 
     private String content;
 

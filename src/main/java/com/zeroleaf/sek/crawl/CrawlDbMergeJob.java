@@ -3,6 +3,7 @@ package com.zeroleaf.sek.crawl;
 import com.zeroleaf.sek.core.AbstractSJob;
 import com.zeroleaf.sek.core.JobCreator;
 
+import com.zeroleaf.sek.util.CollectionUtils;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -72,7 +73,7 @@ public class CrawlDbMergeJob extends AbstractSJob {
          * @return 合并之后的元数据.
          */
         private static URLMeta merge(Iterable<URLMeta> metas) {
-            List<URLMeta> list = iterToList(metas);
+            List<URLMeta> list = CollectionUtils.iterToList(metas);
             if (list.size() == 1)
                 return list.get(0);
 
@@ -97,13 +98,6 @@ public class CrawlDbMergeJob extends AbstractSJob {
             }
 
             return template;
-        }
-
-        private static <T> List<T> iterToList(Iterable<T> iter) {
-            List<T> list = new ArrayList<>();
-            for (T t : iter)
-                list.add(t);
-            return list;
         }
     }
 

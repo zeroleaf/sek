@@ -33,6 +33,12 @@ public class Merge extends AbstractCommand {
             String appdir = args[1];
 
             DirectoryStructure dSt = DirectoryStructure.get(appdir);
+
+            // 合并 DataDb 数据l
+            DataDb datadb = new DataDb(appdir);
+            datadb.merge(dSt.getParsedata());
+
+            // 合并 CrawlDb 数据
             Path rOut = randomDirectory();
             runJob(new NewUrlJob(dSt.getParsedata(), rOut));
 
