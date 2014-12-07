@@ -65,7 +65,7 @@ public class PageEntry implements Writable {
         dataOutput.writeInt(length);
         type.write(dataOutput);
         content.write(dataOutput);
-//        dataOutput.writeLong(modifiedTime);
+        dataOutput.writeLong(modifiedTime);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class PageEntry implements Writable {
         length = dataInput.readInt();
         type.readFields(dataInput);
         content.readFields(dataInput);
-//        modifiedTime = dataInput.readLong();
+        modifiedTime = dataInput.readLong();
     }
 
     @Override
@@ -82,6 +82,7 @@ public class PageEntry implements Writable {
                 "length=" + length +
                 ", type=" + type +
                 ", content=" + content +
+                ", modifiedTime=" + modifiedTime +
                 '}';
     }
 }

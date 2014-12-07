@@ -7,11 +7,15 @@ import com.zeroleaf.sek.util.FileSystems;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.hadoop.fs.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by zeroleaf on 14-12-3.
  */
 public class Merge extends AbstractCommand {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(Merge.class);
 
     @Override
     public String getName() {
@@ -27,6 +31,8 @@ public class Merge extends AbstractCommand {
     @Override
     public void execute(String... args) throws Exception {
         try {
+            LOGGER.info("正在执行任务: {}", getName());
+
             if (args.length < 2)
                 throw new IllegalArgumentException("<appdir> 必须提供");
 
@@ -46,6 +52,8 @@ public class Merge extends AbstractCommand {
             crawlDb.merge(false, rOut);
 
             FileSystems.deleteDirectory(rOut);
+
+            LOGGER.info("任务完成: {}", getName());
 
         } catch (Exception e) {
             e.printStackTrace();

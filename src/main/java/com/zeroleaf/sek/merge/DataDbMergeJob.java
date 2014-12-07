@@ -1,17 +1,16 @@
 package com.zeroleaf.sek.merge;
 
-import com.sun.org.apache.bcel.internal.generic.MONITORENTER;
 import com.zeroleaf.sek.core.AbstractSJob;
 import com.zeroleaf.sek.core.JobCreator;
-import com.zeroleaf.sek.data.PageEntry;
 import com.zeroleaf.sek.parse.ParsedEntry;
-import com.zeroleaf.sek.util.CollectionUtils;
+
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.MapFileOutputFormat;
 
 import java.io.IOException;
 import java.util.*;
@@ -52,8 +51,12 @@ public class DataDbMergeJob extends AbstractSJob {
             context.write(key, getSortedLastElement(values, ParsedEntry.MODIFIED_TIME_COMPARATOR));
         }
 
-        private static <T> T getSortedLastElement(Iterable<T> iter, Comparator<T> cmp) {
-            List<T> list = CollectionUtils.iterToList(iter);
+        private static ParsedEntry getSortedLastElement(Iterable<ParsedEntry> iter, Comparator<ParsedEntry> cmp) {
+//            List<T> list = CollectionUtils.iterToList(iter);
+            List<ParsedEntry> list = new ArrayList<>();
+            for (ParsedEntry entry : iter)
+                list.add(entry.clone());
+
             if (list.size() == 1)
                 return list.get(0);
 
@@ -74,6 +77,7 @@ public class DataDbMergeJob extends AbstractSJob {
         jobCreator.reducer(DataDbMergeJobReducer.class);
         jobCreator.outKey(Text.class);
         jobCreator.outValue(ParsedEntry.class);
+        jobCreator.outFormat(MapFileOutputFormat.class);
 
         return jobCreator.get();
     }

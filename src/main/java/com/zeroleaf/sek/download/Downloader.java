@@ -31,11 +31,15 @@ public class Downloader extends AbstractCommand {
     @Override
     public void execute(String... args) throws Exception {
         try {
+            LOGGER.info("正在执行任务: {}", getName());
+
             setEnv(args);
 
             DirectoryStructure dSt = DirectoryStructure.get(appDir);
 
             runJob(new DownloaderJob(dSt.getFetchlist(false), dSt.getFetchdata()));
+
+            LOGGER.info("任务完成: {}", getName());
         } catch (Exception e) {
             existCode = 10;
             throw e;
@@ -61,7 +65,7 @@ public class Downloader extends AbstractCommand {
                 System.out.println(s);
 
         } catch (ParseException e) {
-            LOGGER.error("命令行参数解析错误, 错误消息为 {}", e.getCause());
+            LOGGER.error("命令行参数解析错误, 错误消息为 {}", e.getMessage());
         }
     }
 

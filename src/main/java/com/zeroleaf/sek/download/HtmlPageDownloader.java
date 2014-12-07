@@ -44,6 +44,7 @@ public class HtmlPageDownloader implements Runnable {
 
                 Thread.sleep(3000);
             } catch (Exception e) {
+                // @todo 记录异常的原因, 同时生成对应的 HtmlPage 元数据.
                 e.printStackTrace();
             }
         }

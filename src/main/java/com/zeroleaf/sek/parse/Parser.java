@@ -5,11 +5,15 @@ import com.zeroleaf.sek.core.DirectoryStructure;
 import com.zeroleaf.sek.core.SekException;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by zeroleaf on 14-12-3.
  */
 public class Parser extends AbstractCommand {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(Parser.class);
 
     private String appdir;
 
@@ -27,6 +31,8 @@ public class Parser extends AbstractCommand {
     @Override
     public void execute(String... args) throws Exception {
         try {
+            LOGGER.info("正在执行任务: {}", getName());
+
             if (args.length < 2)
                 throw new SekException("<appdir> 必须提供");
 
@@ -35,6 +41,7 @@ public class Parser extends AbstractCommand {
             DirectoryStructure dSt = DirectoryStructure.get(appdir);
             runJob(new ParserJob(dSt.getFetchdata(), dSt.getParsedata()));
 
+            LOGGER.info("任务完成: {}", getName());
         } catch (Exception e) {
             e.printStackTrace();
 //            showUsage();

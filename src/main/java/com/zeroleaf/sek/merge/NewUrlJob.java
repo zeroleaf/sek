@@ -66,7 +66,7 @@ public class NewUrlJob extends AbstractSJob {
                 throws IOException, InterruptedException {
 
             URLMeta meta = metaFromParsedEntry(value);
-            LOGGER.debug("URL {} 的新元数据为 {}", key, meta);
+            LOGGER.info("URL {} 的新元数据为 {}", key, meta);
             context.write(key, meta);
 
             Set<Outlink> outlinks = value.getOutlinks();
@@ -98,7 +98,11 @@ public class NewUrlJob extends AbstractSJob {
         protected void reduce(Text key, Iterable<URLMeta> values, Context context)
                 throws IOException, InterruptedException {
 
-            context.write(key, getFirst(values));
+            URLMeta value = getFirst(values);
+
+            LOGGER.info("NewUrlJobReducer: {} => {}", key, value);
+
+            context.write(key, value);
         }
 
         private static <T> T getFirst(Iterable<T> iterable) {

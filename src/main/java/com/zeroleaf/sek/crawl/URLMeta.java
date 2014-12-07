@@ -87,6 +87,8 @@ public class URLMeta implements Writable, Cloneable {
         out.writeUTF(status.toString());
         out.writeFloat(score);
         out.writeLong(fetchInterval);
+        out.writeLong(generateTime);
+        out.writeLong(modifiedTime);
     }
 
     @Override
@@ -94,6 +96,8 @@ public class URLMeta implements Writable, Cloneable {
         status = Status.valueOf(in.readUTF());
         score = in.readFloat();
         fetchInterval = in.readLong();
+        generateTime  = in.readLong();
+        modifiedTime  = in.readLong();
     }
 
     public static URLMeta read(DataInput in) throws IOException {

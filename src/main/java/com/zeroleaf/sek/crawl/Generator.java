@@ -2,6 +2,9 @@ package com.zeroleaf.sek.crawl;
 
 import com.zeroleaf.sek.core.AbstractCommand;
 import com.zeroleaf.sek.core.DirectoryStructure;
+import org.apache.commons.cli.Options;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -14,6 +17,8 @@ import java.io.IOException;
  */
 public class Generator extends AbstractCommand {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(Generator.class);
+
     @Override
     public String getName() {
         return "generate";
@@ -22,9 +27,16 @@ public class Generator extends AbstractCommand {
     @Override
     public void execute(String... as) throws Exception {
         try {
-            GeneratorArgs args = new GeneratorArgs();
-            parseArgs(args, as);
-            generate(args.getAppDir());
+            LOGGER.info("正在执行任务: {}", getName());
+//            GeneratorArgs args = new GeneratorArgs();
+//            parseArgs(args, as);
+
+            if (as.length < 2)
+                throw new IllegalArgumentException("<appdir> 必须");
+
+            String appdir = as[1];
+            generate(appdir);
+            LOGGER.info("任务完成: {}", getName());
         } catch (Exception e) {
             existCode = 10;
             throw e;
@@ -37,6 +49,10 @@ public class Generator extends AbstractCommand {
         DirectoryStructure dSt = DirectoryStructure.get(appDir);
 
         runJob(new GeneratorJob(dSt.getCrawlDb(), dSt.getFetchlist(true)));
+    }
+
+    private static Options generateArgs = new Options();
+    static {
     }
 
     public static void main(String[] args) throws Exception {

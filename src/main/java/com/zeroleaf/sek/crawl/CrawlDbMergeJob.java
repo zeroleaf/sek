@@ -3,7 +3,6 @@ package com.zeroleaf.sek.crawl;
 import com.zeroleaf.sek.core.AbstractSJob;
 import com.zeroleaf.sek.core.JobCreator;
 
-import com.zeroleaf.sek.util.CollectionUtils;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -40,8 +39,7 @@ public class CrawlDbMergeJob extends AbstractSJob {
         protected void map(Text key, URLMeta value, Context context)
             throws IOException, InterruptedException {
 
-            System.out.format("Key: %s, Value: %s%n",
-                              key.toString(), value.toString());
+            LOGGER.info("{} => {}", key, value);
 
             context.write(key, value);
         }
@@ -73,7 +71,14 @@ public class CrawlDbMergeJob extends AbstractSJob {
          * @return 合并之后的元数据.
          */
         private static URLMeta merge(Iterable<URLMeta> metas) {
-            List<URLMeta> list = CollectionUtils.iterToList(metas);
+//            List<URLMeta> list = CollectionUtils.iterToList(metas);
+            // 由于 Hadoop 的Iterable 的实现是一次从序列化文件中读取一个,
+            // 所以其引用都是相同的, 将其添加到 List 中则所有的对象都会指向序列化中的最后一个
+            // 因此必须手动的复制.
+            List<URLMeta> list = new ArrayList<>();
+            for (URLMeta meta : metas) {
+                list.add(meta.clone());
+            }
             if (list.size() == 1)
                 return list.get(0);
 

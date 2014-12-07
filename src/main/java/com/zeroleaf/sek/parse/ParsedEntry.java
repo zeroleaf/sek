@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * Created by zeroleaf on 14-12-3.
  */
-public class ParsedEntry implements Writable {
+public class ParsedEntry implements Writable, Cloneable {
 
     public static Comparator<ParsedEntry> MODIFIED_TIME_COMPARATOR =
             new Comparator<ParsedEntry>() {
@@ -27,7 +27,7 @@ public class ParsedEntry implements Writable {
 
     private String content;
 
-    private Set<Outlink> outlinks = new HashSet<>();
+    private HashSet<Outlink> outlinks = new HashSet<>();
 
     private String type;
 
@@ -128,9 +128,22 @@ public class ParsedEntry implements Writable {
     }
 
     @Override
+    public ParsedEntry clone() {
+        ParsedEntry clone = null;
+        try {
+            clone = (ParsedEntry) super.clone();
+            clone.outlinks = (HashSet<Outlink>) outlinks.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public String toString() {
         return "ParsedEntry{" +
-//                "content='" + content + '\'' +
+                "content='" + content + '\'' +
                 ", outlinks=" + outlinks +
                 ", type='" + type + '\'' +
                 ", length=" + length +

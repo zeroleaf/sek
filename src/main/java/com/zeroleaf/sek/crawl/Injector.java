@@ -32,12 +32,15 @@ public class Injector extends AbstractCommand {
     @Override
     public void execute(String... as) throws Exception {
         try {
+            LOGGER.info("正在执行任务: {}", getName());
 
             parseArgs(args, as);
 
             checkArgs();
 
             inject(args.getAppDir(), args.getUrlsDir());
+
+            LOGGER.info("任务完成: {}", getName());
         } catch (Exception e) {
             // @TODO 出错原因更加细化.
             existCode = 10;
