@@ -21,6 +21,8 @@ import java.io.IOException;
 
 /**
  * @author zeroleaf
+ *
+ * @TODO 要忽略以访问过的 URL.
  */
 public class GeneratorJob extends AbstractSJob {
 
@@ -56,7 +58,10 @@ public class GeneratorJob extends AbstractSJob {
         protected void map(Text key, URLMeta value, Context context)
             throws IOException, InterruptedException {
 
-            if (index < maxCount) {
+            LOGGER.info("{} => {}", key, value);
+
+
+            if (index < maxCount && needCrawl(key, value)) {
                 context.write(new LongWritable(index++), new FetchEntry(key, value));
             }
 
@@ -65,6 +70,18 @@ public class GeneratorJob extends AbstractSJob {
 
             // 由于之前已经将 URL 进行去重处理了, 因此 FetchEntry 作为 Key 输出是可行的.
 //            context.write(new FetchEntry(key, value), NullWritable.get());
+        }
+
+        private boolean needCrawl(Text url, URLMeta meta) {
+            if (meta.getStatus() == URLMeta.Status.FETCHED) {
+                long now = System.currentTimeMillis();
+                boolean isNeed = (now - meta.getModifiedTime()) > (meta.getFetchInterval() * 1000);
+                if (!isNeed)
+                    LOGGER.info("URL {}, 其元数据为 {}, 当前不需要再次抓取, 忽略.", url, meta);
+            }
+
+            // 对于其他情况, 目前我们简单的返回true.
+            return true;
         }
     }
 
