@@ -61,16 +61,13 @@ public class Downloader extends AbstractCommand {
             if (cl.hasOption("n"))
                 System.setProperty(DownloaderMapper.THREADS, cl.getOptionValue("n"));
 
-            for (String s : cl.getArgs())
-                System.out.println(s);
-
         } catch (ParseException e) {
             LOGGER.error("命令行参数解析错误, 错误消息为 {}", e.getMessage());
         }
     }
 
     public static void main(String[] args) throws Exception {
-        args = new String[]{"download", "-n", "10", "-t", "120", "sek"};
+        args = new String[]{"download", "-n", "4", "-t", "120", "sek"};
         new Downloader().execute(args);
     }
 
@@ -79,7 +76,7 @@ public class Downloader extends AbstractCommand {
     private static final Options downloadArgs = new Options();
     static {
 
-        downloadArgs.addOption("l", "size", true, "网页下载的限制大小, 字节为单位")
+        downloadArgs.addOption("l", "size",    true, "网页下载的限制大小, 字节为单位")
                     .addOption("t", "during",  true, "指定程序运行时间, 分钟为单位")
                     .addOption("n", "threads", true, "并发下载的线程数量");
     }

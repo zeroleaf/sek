@@ -32,10 +32,10 @@ public class URLMeta implements Writable, Cloneable {
      * URL 的状态.
      */
     public static enum Status {
-        UNFETCHED,
-        FETCHED,
-        NOT_EXITS,
-        NOT_MODIFIED
+        UNFETCHED,      // 未获取
+        FETCHED,        // 已获取
+        NOT_EXITS,      // 资源不存在
+        NOT_MODIFIED    // 资源未修改
     }
 
     private Status status;

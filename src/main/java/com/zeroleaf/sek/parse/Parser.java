@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Created by zeroleaf on 14-12-3.
+ *
+ * TODO 解析所生成的数据太大, 元数据只有 174M, 但解析之后的数据却有  13G!
  */
 public class Parser extends AbstractCommand {
 
@@ -54,7 +56,7 @@ public class Parser extends AbstractCommand {
     }
 
     public static void main(String[] args) throws Exception {
-        args = new String[]{"parse", "sek"};
+        args = new String[]{"parse", "sek_old"};
         new Parser().execute(args);
     }
 }

@@ -15,8 +15,10 @@ public class Crawl extends AbstractCommand {
 
     private static Logger LOGGER = LoggerFactory.getLogger(Crawl.class);
 
-    private int repeat = 1;
-    private int timeRemain = -1;
+    private static CommandLine cl;
+
+    private static int repeat = 1;
+    private static int timeRemain = -1;
 
     @Override
     public String getName() {
@@ -32,11 +34,11 @@ public class Crawl extends AbstractCommand {
 
                 long start = System.currentTimeMillis();
 
-                CommandFactory.executeCommand("inject", args);
-                CommandFactory.executeCommand("generate", args);
-                CommandFactory.executeCommand("download", args);
-                CommandFactory.executeCommand("parse", args);
-                CommandFactory.executeCommand("merge", args);
+                CommandFactory.executeCommand("inject",   getAppdir(), getSeedurl());
+                CommandFactory.executeCommand("generate", getAppdir());
+                CommandFactory.executeCommand("download", getDownloadArgs());
+                CommandFactory.executeCommand("parse",    getAppdir());
+                CommandFactory.executeCommand("merge",    getAppdir());
 
                 int timeEscapeMin = (int) ((System.currentTimeMillis() - start) / 1000 / 60);
                 timeRemain -= timeEscapeMin;
@@ -55,6 +57,27 @@ public class Crawl extends AbstractCommand {
         }
     }
 
+    private static String[] getDownloadArgs() {
+        StringBuilder sb = new StringBuilder("Download ");
+        if (timeRemain > 0)
+            sb.append(" -t ").append(timeRemain);
+        if (cl.hasOption('l'))
+            sb.append(" -l ").append(cl.getOptionValue("l"));
+        if (cl.hasOption('n'))
+            sb.append(" -n ").append(cl.getOptionValue("n"));
+
+        sb.append(" ").append(getAppdir());
+        return sb.toString().split("\\s+");
+    }
+
+    private static String getAppdir() {
+        return cl.getArgs()[1];
+    }
+
+    private static String getSeedurl() {
+        return cl.getArgs()[2];
+    }
+
     private int getRunTimeOptionIndex(String ... args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-r") || args[i].equals("--during"))
@@ -64,7 +87,7 @@ public class Crawl extends AbstractCommand {
     }
 
     private void setEnv(String ... args) throws ParseException {
-        CommandLine cl = new BasicParser().parse(crawlArgs, args);
+        cl = new BasicParser().parse(crawlArgs, args);
 
         if (cl.hasOption("r")) {
             repeat = Integer.valueOf(cl.getOptionValue("r"));
@@ -81,7 +104,9 @@ public class Crawl extends AbstractCommand {
 
     private static Options crawlArgs = new Options();
     static {
-        crawlArgs.addOption("r", "repeat", true, "下载需要迭代的次数. 注: 实际迭代次数由下载时间决定.");
-        crawlArgs.addOption("t", "during", true, "指定程序运行时间, 分钟为单位");
+        crawlArgs.addOption("r", "repeat",  true, "下载需要迭代的次数. 注: 实际迭代次数由下载时间决定.");
+        crawlArgs.addOption("t", "during",  true, "指定程序运行时间, 分钟为单位");
+        crawlArgs.addOption("l", "size",    true, "网页下载的限制大小, 字节为单位");
+        crawlArgs.addOption("n", "threads", true, "并发下载的线程数量");
     }
 }

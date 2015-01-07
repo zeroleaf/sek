@@ -93,4 +93,9 @@ public class Injector extends AbstractCommand {
                     job.getCounters().findCounter("injector", "url_filtered")
                         .getValue());
     }
+
+    public static void main(String[] args) throws Exception {
+        args = new String[]{"inject", "sek", "urls"};
+        new Injector().execute(args);
+    }
 }

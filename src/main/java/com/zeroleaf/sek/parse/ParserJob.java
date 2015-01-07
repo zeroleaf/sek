@@ -7,6 +7,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.MapFileOutputFormat;
 import org.slf4j.Logger;
@@ -36,10 +37,13 @@ public class ParserJob extends AbstractSJob {
 
         private static Pattern PAT_A_TAG = Pattern.compile("<a.*?href=\"(.*?)\".*?>(.*?)</a>");
 
+        int pageCount = 0;
+
         @Override
         protected void map(Text key, PageEntry value, Context context)
                 throws IOException, InterruptedException {
 
+            LOGGER.info("{}, 正在处理第 {} 个网页.", toString(), ++pageCount);
             context.write(key, parse(value));
         }
 
@@ -59,6 +63,22 @@ public class ParserJob extends AbstractSJob {
         }
     }
 
+    private static class ParserReducer
+            extends Reducer<Text, ParsedEntry, Text, ParsedEntry> {
+
+        @Override
+        protected void reduce(Text key, Iterable<ParsedEntry> values, Context context) throws IOException, InterruptedException {
+            context.write(key, getFirst(values));
+        }
+
+        private static ParsedEntry getFirst(Iterable<ParsedEntry> entries) {
+            for (ParsedEntry entry : entries) {
+                return entry;
+            }
+            return null;
+        }
+    }
+
     @Override
     public Job create() throws IOException {
         JobCreator jobCreator = new JobCreator();
@@ -70,6 +90,7 @@ public class ParserJob extends AbstractSJob {
 
         jobCreator.inputFormat(SequenceFileInputFormat.class);
         jobCreator.mapper(ParserMapper.class);
+        jobCreator.reducer(ParserReducer.class);
         jobCreator.outKey(Text.class);
         jobCreator.outValue(ParsedEntry.class);
         jobCreator.outFormat(MapFileOutputFormat.class);
