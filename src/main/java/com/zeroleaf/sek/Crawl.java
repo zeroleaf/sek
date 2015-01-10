@@ -36,7 +36,7 @@ public class Crawl extends AbstractCommand {
 
                 CommandFactory.executeCommand("inject",   getAppdir(), getSeedurl());
                 CommandFactory.executeCommand("generate", getAppdir());
-                CommandFactory.executeCommand("download", getDownloadArgs());
+                CommandFactory.executeCommand(getDownloadArgs());
                 CommandFactory.executeCommand("parse",    getAppdir());
                 CommandFactory.executeCommand("merge",    getAppdir());
 
@@ -58,7 +58,7 @@ public class Crawl extends AbstractCommand {
     }
 
     private static String[] getDownloadArgs() {
-        StringBuilder sb = new StringBuilder("Download ");
+        StringBuilder sb = new StringBuilder("download ");
         if (timeRemain > 0)
             sb.append(" -t ").append(timeRemain);
         if (cl.hasOption('l'))
@@ -97,10 +97,10 @@ public class Crawl extends AbstractCommand {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        args = new String[]{"crawl", "sek", "urls"};
-        new Crawl().execute(args);
-    }
+//    public static void main(String[] args) throws Exception {
+//        args = new String[]{"crawl", "sek", "urls"};
+//        new Crawl().execute(args);
+//    }
 
     private static Options crawlArgs = new Options();
     static {

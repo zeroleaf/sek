@@ -42,10 +42,13 @@ public class CommandFactory {
         return null;
     }
 
-    public static void executeCommand(String name, String ... args) throws Exception {
-        Command cmd = find(name);
+    public static void executeCommand(String ... args) throws Exception {
+        if (args == null || args.length < 1)
+            throw new IllegalArgumentException("命令格式错误!");
+
+        Command cmd = find(args[0]);
         if (cmd == null)
-            throw new SekException("不存在命令 " + name);
+            throw new SekException("不存在命令 " + args[0]);
 
         cmd.execute(args);
     }

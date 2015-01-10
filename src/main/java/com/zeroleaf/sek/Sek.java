@@ -40,7 +40,7 @@ public class Sek {
      */
     private static void showUsage(String msg) {
         // @TODO 显示程序帮助信息
-        System.out.format("Error message : %s, and this is usage", msg);
+        System.out.format("发生错误, 信息为: %s", msg);
     }
 
     public int run(String ... args) {
@@ -52,7 +52,7 @@ public class Sek {
             showUsage(e.getMessage());
             System.exit(1);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("发生未知错误! 信息为: " + e.getMessage());
             assert cmd != null;
             System.exit(cmd.getExistCode());
         }
@@ -60,7 +60,7 @@ public class Sek {
     }
 
     public static void main(String[] args) {
-        args = new String[]{"inject", "sek", "urls"};
+        args = new String[]{"crawl", "-t", "3", "sek", "urls"};
         new Sek().run(args);
     }
 }

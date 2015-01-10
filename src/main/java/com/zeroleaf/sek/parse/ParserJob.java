@@ -68,6 +68,7 @@ public class ParserJob extends AbstractSJob {
 
         @Override
         protected void reduce(Text key, Iterable<ParsedEntry> values, Context context) throws IOException, InterruptedException {
+            LOGGER.info("Reducing {}", key);
             context.write(key, getFirst(values));
         }
 
