@@ -60,7 +60,7 @@ public class Sek {
     }
 
     public static void main(String[] args) {
-        args = new String[]{"crawl", "-t", "3", "sek", "urls"};
+        args = new String[]{"crawl", "-t", "2", "sek", "urls"};
         new Sek().run(args);
     }
 }

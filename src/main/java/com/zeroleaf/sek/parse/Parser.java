@@ -56,7 +56,7 @@ public class Parser extends AbstractCommand {
     }
 
     public static void main(String[] args) throws Exception {
-        args = new String[]{"parse", "sek_old"};
+        args = new String[]{"parse", "sek"};
         new Parser().execute(args);
     }
 }

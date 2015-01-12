@@ -67,7 +67,7 @@ public class Downloader extends AbstractCommand {
     }
 
     public static void main(String[] args) throws Exception {
-        args = new String[]{"download", "-n", "4", "-t", "120", "sek"};
+        args = new String[]{"download", "-n", "4", "-t", "1", "sek"};
         new Downloader().execute(args);
     }
 
